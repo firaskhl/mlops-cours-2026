@@ -63,3 +63,5 @@ rag/docs/*.pdf
 
 # --- Cours : PDF générés (make pdf) ---
 dist/
+# État local de Vagrant (VM, configuration et métadonnées)
+infra/vagrant/.vagrant/

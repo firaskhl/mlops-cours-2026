@@ -1404,15 +1404,43 @@ puis vous revenez sur `main` : `git switch main && git pull`.
 make check-m4
 ```
 
+## Mission autonome (25 min, 4 points)
+
+**Une image encore plus légère.**
+
+Votre image `scoring-api` pèse environ 330 Mo. Réduisez-la d'**au moins 20 %** sans rien
+changer à ce qu'elle répond : mêmes probabilités sur `packaging/sample_request.py`, même
+`/health`, toujours non-root.
+
+Commencez par mesurer où partent les mégaoctets (couches de l'image, paquets installés), puis
+choisissez vos leviers. Si vous ne trouvez pas 20 %, documentez ce que vous avez obtenu et
+pourquoi vous êtes bloqués : une démarche bien menée vaut plus qu'un chiffre.
+
+**Règles communes**
+- Aucun code n'est fourni : à vous de trouver la démarche. Documentation officielle des outils,
+  code des labs précédents et `--help` autorisés.
+- Durée visée : 25 minutes en binôme. Les deux noms figurent dans le compte rendu.
+- Livrable : `reports/mission-m4.md`, commité dans la PR du lab, avec quatre sections :
+  1. **Le problème** : ce que vous avez trouvé, en une ou deux phrases ;
+  2. **La démarche** : ce que vous avez essayé, y compris ce qui n'a pas marché ;
+  3. **La preuve** : les commandes et les sorties, **avant** et **après** votre changement ;
+  4. **Les limites** : ce que votre solution ne couvre pas.
+- Tout ce que vérifiait déjà `make check-m4` doit rester vert.
+
+**Notation (4 points)** : mesure de départ et analyse de ce qui pèse (1) ; réduction obtenue et
+mesurée (1,5) ; preuve que les prédictions sont identiques et que l'image reste non-root (1) ;
+limites et compromis (0,5).
+
 ## Critères d'évaluation (noté sur 20)
 
 | Critère | Description | Points |
 |---|---|---|
-| Image fonctionnelle | Image optimized build + healthcheck OK + prédictions cohérentes (= scikit-learn), schéma d'entrée généré depuis `dataset.yaml`, 422 sur requête invalide. | 6 |
-| Optimisation taille | Image < 500 Mo, multi-stage, `.dockerignore`, user non-root. | 4 |
-| Benchmark | Script de benchmark + table P50/P95/P99 sur 3 backends. | 4 |
+| Image fonctionnelle | Image optimized build + healthcheck OK + prédictions cohérentes (= scikit-learn), schéma d'entrée généré depuis `dataset.yaml`, 422 sur requête invalide. | 5 |
+| Optimisation taille | Image < 500 Mo, multi-stage, `.dockerignore`, user non-root. | 3 |
+| Benchmark | Script de benchmark + table P50/P95/P99 sur 3 backends. | 3 |
 | Scan sécurité | Trivy + ModelScan lancés, rapports dans `reports/`. | 3 |
-| Rapport | 5 sections rédigées, analyse et recommandation claires. | 3 |
+| Rapport | 5 sections rédigées, analyse et recommandation claires. | 2 |
+| Mission autonome | Image réduite d'au moins 20 % avec prédictions identiques, démarche mesurée (`reports/mission-m4.md`). | 4 |
 | **Total** | | **20** |
 
 ## Annexe — Troubleshooting

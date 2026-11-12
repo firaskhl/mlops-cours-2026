@@ -2305,13 +2305,41 @@ complet, et `make check-m6` se lance de là.
 make check-m6
 ```
 
+## Mission autonome (25 min, 4 points)
+
+**Une régression que votre chaîne ne voit pas.**
+
+Votre CI teste l'API et vos gates contrôlent le modèle. Trouvez une modification qui casse
+quelque chose d'important **et que la chaîne laisse pourtant passer jusqu'au déploiement** :
+une réponse de l'API qui change de format, un seuil de décision qui dérive, un champ qui
+disparaît…
+
+Faites-la sur une branche, montrez le run vert qui n'aurait pas dû l'être, puis ajoutez le
+contrôle qui la bloque (un test, une étape du workflow, une condition de gate). Montrez enfin
+le run rouge sur la même modification, et le run vert une fois la modification annulée.
+
+**Règles communes**
+- Aucun code n'est fourni : à vous de trouver la démarche. Documentation officielle des outils,
+  code des labs précédents et `--help` autorisés.
+- Durée visée : 25 minutes en binôme. Les deux noms figurent dans le compte rendu.
+- Livrable : `reports/mission-m6.md`, commité dans la PR du lab, avec quatre sections :
+  1. **Le problème** : ce que vous avez trouvé, en une ou deux phrases ;
+  2. **La démarche** : ce que vous avez essayé, y compris ce qui n'a pas marché ;
+  3. **La preuve** : les commandes et les sorties, **avant** et **après** votre changement ;
+  4. **Les limites** : ce que votre solution ne couvre pas.
+- Tout ce que vérifiait déjà `make check-m6` doit rester vert.
+
+**Notation (4 points)** : régression crédible et dangereuse en production (1) ; preuve qu'elle
+passait (1) ; contrôle ajouté qui la bloque, run rouge à l'appui (1,5) ; limites (0,5).
+
 ## Critères d'évaluation (noté sur 20)
 
 | Critère | Description | Points |
 |---|---|---|
-| CI GitHub Actions | Workflow au vert : lint, tests (API avec mini-modèle, manifests, CT), build, test de fumée, push GHCR, déploiement de staging par commit. | 6 |
-| CD avec Argo CD | Deux Applications synchronisées automatiquement (selfHeal), prod reprise sans rupture, canary et promotion par commits. | 6 |
-| CT fonctionnel | Webhook déclenché par un rapport Evidently, pipeline KFP avec gate (métrique + coût), nouveau modèle en prod sans intervention, rapport avec le temps du cycle. | 8 |
+| CI GitHub Actions | Workflow au vert : lint, tests (API avec mini-modèle, manifests, CT), build, test de fumée, push GHCR, déploiement de staging par commit. | 5 |
+| CD avec Argo CD | Deux Applications synchronisées automatiquement (selfHeal), prod reprise sans rupture, canary et promotion par commits. | 5 |
+| CT fonctionnel | Webhook déclenché par un rapport Evidently, pipeline KFP avec gate (métrique + coût), nouveau modèle en prod sans intervention, rapport avec le temps du cycle. | 6 |
+| Mission autonome | Régression qui passait la chaîne, prouvée, puis bloquée par un contrôle ajouté (`reports/mission-m6.md`). | 4 |
 | **Total** | | **20** |
 
 ## Annexe — Troubleshooting

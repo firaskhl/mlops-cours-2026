@@ -2201,16 +2201,43 @@ puis `git switch main && git pull` : `make check-m7` se lance de là.
 | 15 | Canary analysé | `reports/m7/canary-analysis.md` | décision appliquée par commit | ☐ |
 | 16 | Rapport | `reports/rapport-m7.md` | 6 sections remplies | ☐ |
 
+## Mission autonome (25 min, 4 points)
+
+**Un incident invisible sur vos tableaux de bord.**
+
+Imaginez une panne que vos métriques, vos alertes et votre dashboard ne détectent pas
+aujourd'hui : l'API répond 200 mais toujours le même score, un groupe de clients reçoit
+soudain beaucoup plus de refus, une variable arrive vide et prend une valeur par défaut…
+
+Provoquez-la sur votre cluster, montrez qu'aucune alerte ne se déclenche, puis ajoutez ce qui
+la rend visible : une métrique, une règle d'alerte avec son runbook, ou un panneau Grafana.
+Rejouez l'incident et montrez l'alerte qui se déclenche, puis qui se résout.
+
+**Règles communes**
+- Aucun code n'est fourni : à vous de trouver la démarche. Documentation officielle des outils,
+  code des labs précédents et `--help` autorisés.
+- Durée visée : 25 minutes en binôme. Les deux noms figurent dans le compte rendu.
+- Livrable : `reports/mission-m7.md`, commité dans la PR du lab, avec quatre sections :
+  1. **Le problème** : ce que vous avez trouvé, en une ou deux phrases ;
+  2. **La démarche** : ce que vous avez essayé, y compris ce qui n'a pas marché ;
+  3. **La preuve** : les commandes et les sorties, **avant** et **après** votre changement ;
+  4. **Les limites** : ce que votre solution ne couvre pas.
+- Tout ce que vérifiait déjà `make check-m7` doit rester vert.
+
+**Notation (4 points)** : incident réaliste et silencieux, prouvé (1) ; détection ajoutée et
+versionnée (1,5) ; alerte déclenchée puis résolue (1) ; runbook clair (0,5).
+
 ## Critères d'évaluation (noté sur 20)
 
 | Critère | Description | Points |
 |---|---|---|
-| Instrumentation API | Endpoint `/metrics`, compteurs + 2 histogrammes, labels pertinents et bornés, groupes sensibles, tests | 4 |
-| Stack Prometheus/Grafana | Stack installée, PodMonitor scrape chaque révision, dashboard versionné et complet | 4 |
-| Evidently en continu | CronJob fonctionnel sur les vraies demandes, référence DVC, métriques dans Prometheus | 4 |
+| Instrumentation API | Endpoint `/metrics`, compteurs + 2 histogrammes, labels pertinents et bornés, groupes sensibles, tests | 3 |
+| Stack Prometheus/Grafana | Stack installée, PodMonitor scrape chaque révision, dashboard versionné et complet | 3 |
+| Evidently en continu | CronJob fonctionnel sur les vraies demandes, référence DVC, métriques dans Prometheus | 3 |
 | Alertes SLO | Alertes pertinentes (burn rate, drift, taux de refus) avec runbook, routage par sévérité | 3 |
 | Canary analysé | Garde-fous compris, décision appliquée par Git, rollback démontré | 2 |
-| Rapport + démo | Captures, analyse, démo drift → alerte → ré-entraînement complète | 3 |
+| Rapport + démo | Captures, analyse, démo drift → alerte → ré-entraînement complète | 2 |
+| Mission autonome | Incident silencieux provoqué, rendu visible (métrique, alerte, runbook), alerte déclenchée puis résolue (`reports/mission-m7.md`). | 4 |
 | **Total** | | **20** |
 
 ## Annexe — Troubleshooting

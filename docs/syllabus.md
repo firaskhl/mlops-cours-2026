@@ -888,12 +888,12 @@ Chaque énoncé se termine par sa grille ; le tableau en reprend les critères. 
 | M0 — Setup | non noté | `make check-m0` vert : condition d'accès au Module 1 | — |
 | M1 — Versioning | 20 | reproductibilité 6 · tracking 6 · pertinence du modèle 4 · propreté du code 4 | 13,3 % |
 | M2 — Pipelines | 20 | pipeline KFP 6 · intégration MLflow 3 · robustesse 3 · pipeline Airflow 3 · rapport comparatif 5 | 13,3 % |
-| M3 — Validation | 20 | expectations 6 · gate bloquant 5 · drift 4 · validation du modèle 3 · propreté du code 2 | 13,3 % |
-| M4 — Packaging | 20 | image fonctionnelle 6 · optimisation taille 4 · benchmark 4 · scan sécurité 3 · rapport 3 | 13,3 % |
-| M5 — Serving | 20 | déploiement KServe 6 · autoscaling 4 · benchmark 4 · canary 3 · rapport 3 | 13,3 % |
-| M6 — CI/CD/CT | 20 | CI 6 · CD 6 · CT 8 | 13,3 % |
-| M7 — Monitoring | 20 | instrumentation 4 · Prometheus/Grafana 4 · Evidently en continu 4 · alertes SLO 3 · canary analysé 2 · rapport et démo 3 | 13,3 % |
-| M8 — Gouvernance | 10 | sécurité 2,5 · équité 2,5 · explicabilité 2,5 · gouvernance 2,5 | 6,7 % |
+| M3 — Validation | 20 | expectations 5 · gate bloquant 4 · drift 3 · validation du modèle 2 · propreté du code 2 · mission autonome 4 | 13,3 % |
+| M4 — Packaging | 20 | image fonctionnelle 5 · optimisation taille 3 · benchmark 3 · scan sécurité 3 · rapport 2 · mission autonome 4 | 13,3 % |
+| M5 — Serving | 20 | déploiement KServe 5 · autoscaling 3 · benchmark 3 · canary 3 · rapport 2 · mission autonome 4 | 13,3 % |
+| M6 — CI/CD/CT | 20 | CI 5 · CD 5 · CT 6 · mission autonome 4 | 13,3 % |
+| M7 — Monitoring | 20 | instrumentation 3 · Prometheus/Grafana 3 · Evidently en continu 3 · alertes SLO 3 · canary analysé 2 · rapport et démo 2 · mission autonome 4 | 13,3 % |
+| M8 — Gouvernance | 10 | sécurité 2 · équité 2 · explicabilité 2 · gouvernance 2 · mission autonome 2 | 6,7 % |
 | M9 — LLMOps (optionnel) | — | grille de l'énoncé en auto-évaluation | non compté |
 | **Total** | **150** | | **100 %** |
 
@@ -907,6 +907,12 @@ Chaque énoncé se termine par sa grille ; le tableau en reprend les critères. 
 > **Un check vert n'est pas une note maximale**
 > `make check-mX` vérifie que les livrables existent et fonctionnent. La note porte aussi sur la
 > qualité : analyse des rapports, justification des choix, propreté du code.
+
+> [!NOTE]
+> **La mission autonome (Labs 3 à 8)**
+> Chaque lab se termine par une mission de 25 minutes sans code fourni : trouver un problème
+> que le lab laisse passer, le prouver, le corriger et mesurer l'effet. Elle compte pour 4 points
+> (2 au Lab 8) et se rend dans `reports/mission-mX.md`, dans la PR du lab.
 
 ## Critères d'évaluation du mini-projet
 

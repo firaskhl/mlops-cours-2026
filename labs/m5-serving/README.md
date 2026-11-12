@@ -1367,15 +1367,42 @@ fusionnez, puis vous revenez sur `main` : `git switch main && git pull`.
 make check-m5
 ```
 
+## Mission autonome (25 min, 4 points)
+
+**Tenir la charge mieux, sans changer de machine.**
+
+Reprenez le run Locust le plus chargé de l'étape 6. Trouvez **un changement de configuration**
+de votre InferenceService (autoscaling, ressources, concurrence, nombre minimal de répliques…)
+qui améliore la latence P95 ou le taux d'erreur **d'au moins 25 %**, à charge égale.
+
+Formulez d'abord une hypothèse sur ce qui limite les performances, puis changez **un seul
+paramètre à la fois**. Gardez la trace de chaque essai, même ceux qui n'améliorent rien.
+
+**Règles communes**
+- Aucun code n'est fourni : à vous de trouver la démarche. Documentation officielle des outils,
+  code des labs précédents et `--help` autorisés.
+- Durée visée : 25 minutes en binôme. Les deux noms figurent dans le compte rendu.
+- Livrable : `reports/mission-m5.md`, commité dans la PR du lab, avec quatre sections :
+  1. **Le problème** : ce que vous avez trouvé, en une ou deux phrases ;
+  2. **La démarche** : ce que vous avez essayé, y compris ce qui n'a pas marché ;
+  3. **La preuve** : les commandes et les sorties, **avant** et **après** votre changement ;
+  4. **Les limites** : ce que votre solution ne couvre pas.
+- Tout ce que vérifiait déjà `make check-m5` doit rester vert.
+
+**Notation (4 points)** : hypothèse argumentée à partir des mesures (1) ; essais menés un
+paramètre à la fois (1) ; amélioration mesurée dans les mêmes conditions (1,5) ; coût de la
+solution (ressources, démarrage à froid) discuté (0,5).
+
 ## Critères d'évaluation (noté sur 20)
 
 | Critère | Description | Points |
 |---|---|---|
-| Déploiement KServe | KServe installé dans le cluster du cours, ISVC READY, `/predict` fonctionnel via la passerelle, seuil servi = seuil du champion. | 6 |
-| Autoscaling | Autoscaler configuré (KPA sur le débit), scale-up observé sous charge, scale-to-zero mesuré. | 4 |
-| Benchmark | 3 runs Locust, table P50/P95/P99 + RPS + erreurs. | 4 |
+| Déploiement KServe | KServe installé dans le cluster du cours, ISVC READY, `/predict` fonctionnel via la passerelle, seuil servi = seuil du champion. | 5 |
+| Autoscaling | Autoscaler configuré (KPA sur le débit), scale-up observé sous charge, scale-to-zero mesuré. | 3 |
+| Benchmark | 3 runs Locust, table P50/P95/P99 + RPS + erreurs. | 3 |
 | Canary | v2 déployée, split 90/10 vérifié expérimentalement, promotion ou rollback. | 3 |
-| Rapport | 5 sections, analyse honnête du point de saturation. | 3 |
+| Rapport | 5 sections, analyse honnête du point de saturation. | 2 |
+| Mission autonome | Hypothèse, essais un paramètre à la fois, gain de P95 ou d'erreurs mesuré à charge égale (`reports/mission-m5.md`). | 4 |
 | **Total** | | **20** |
 
 ## Annexe — Troubleshooting

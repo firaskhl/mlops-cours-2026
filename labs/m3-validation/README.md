@@ -2223,15 +2223,46 @@ l'approuve ; vous la fusionnez, puis vous revenez sur `main` : `git switch main 
 | 13 | Metrics KFP loguées | KFP → step → Input/Output | `n_failed`, `n_drifted`, `roc_auc` visibles | ☐ |
 | 14 | Rapport téléchargé | `ls reports/kfp/` | `drift.html` récupéré depuis SeaweedFS | ☐ |
 
+## Mission autonome (25 min, 4 points)
+
+**Un défaut que votre contrat laisse passer.**
+
+Votre suite Great Expectations bloque les données corrompues de `src/simulate.py`. Mais
+laisse-t-elle passer d'autres données manifestement fausses ? Mettez-vous à la place d'un
+fournisseur de données négligent : fabriquez **un fichier réaliste mais faux** (une erreur
+d'unité, une erreur de saisie, un export raté…) que `python -m src.validate_data` **accepte**.
+
+Puis renforcez le contrôle pour qu'il le refuse :
+- soit une règle de plus dans le contrat (dans la suite `gx/`, ou dans ce qui la génère) ;
+- soit un test comportemental de plus, si le défaut concerne le modèle plutôt que les données.
+
+Le fichier propre doit toujours passer.
+
+**Règles communes**
+- Aucun code n'est fourni : à vous de trouver la démarche. Documentation officielle des outils,
+  code des labs précédents et `--help` autorisés.
+- Durée visée : 25 minutes en binôme. Les deux noms figurent dans le compte rendu.
+- Livrable : `reports/mission-m3.md`, commité dans la PR du lab, avec quatre sections :
+  1. **Le problème** : ce que vous avez trouvé, en une ou deux phrases ;
+  2. **La démarche** : ce que vous avez essayé, y compris ce qui n'a pas marché ;
+  3. **La preuve** : les commandes et les sorties, **avant** et **après** votre changement ;
+  4. **Les limites** : ce que votre solution ne couvre pas.
+- Tout ce que vérifiait déjà `make check-m3` doit rester vert.
+
+**Notation (4 points)** : défaut réaliste et bien expliqué (1) ; preuve que l'ancien contrôle
+l'accepte (1) ; nouveau contrôle qui le refuse sans casser les données propres (1,5) ; limites
+honnêtes (0,5).
+
 ## Critères d'évaluation (noté sur 20)
 
 | Critère | Description | Points |
 |---|---|---|
-| Pertinence des expectations | Les checks GE couvrent structure, types, contraintes métier ; générés depuis `dataset.yaml`, pas seulement 2-3 triviaux ; suite versionnée et relue. | 6 |
-| Gate bloquant fonctionnel | Le pipeline échoue réellement sur données corrompues (pas juste un warning) : `prepare-features` n'est jamais lancé. | 5 |
-| Détection de drift | `detect_drift` utilise KS/χ² + PSI (significativité et magnitude), rapport HTML lisible, seuils configurables (`params.yaml`). | 4 |
-| Validation du modèle | `validate_model` dans le pipeline (Evidently avec tests + tests comportementaux) bloque l'enregistrement ; rapport HTML visible dans KFP. | 3 |
+| Pertinence des expectations | Les checks GE couvrent structure, types, contraintes métier ; générés depuis `dataset.yaml`, pas seulement 2-3 triviaux ; suite versionnée et relue. | 5 |
+| Gate bloquant fonctionnel | Le pipeline échoue réellement sur données corrompues (pas juste un warning) : `prepare-features` n'est jamais lancé. | 4 |
+| Détection de drift | `detect_drift` utilise KS/χ² + PSI (significativité et magnitude), rapport HTML lisible, seuils configurables (`params.yaml`). | 3 |
+| Validation du modèle | `validate_model` dans le pipeline (Evidently avec tests + tests comportementaux) bloque l'enregistrement ; rapport HTML visible dans KFP. | 2 |
 | Propreté du code | Code réutilisé dans l'image (pas recopié), imports dans les fonctions, HTML bien formé, metrics logées, aucun nom de colonne en dur. | 2 |
+| Mission autonome | Défaut réaliste que le contrat acceptait, prouvé, puis bloqué par un contrôle ajouté (`reports/mission-m3.md`). | 4 |
 | **Total** | | **20** |
 
 ## Annexe — Troubleshooting

@@ -666,7 +666,7 @@ git commit -m "feat: contrat de données Great Expectations (gx/)"
 
 > [!TIP]
 > **Alternative légère : Pandera**
-> Pour un contrôle de schéma rapide dans un test unitaire (Lab 6), Pandera exprime le même
+> Pour un contrôle de schéma rapide dans un test unitaire, Pandera exprime le même
 > type de contrat en quelques lignes, lui aussi généré depuis `dataset.yaml` :
 > ```bash
 > python - <<'EOF'
@@ -826,7 +826,7 @@ COPY pipelines/__init__.py pipelines/stage.py pipelines/
 
 # src et pipelines importables depuis n'importe quel dossier, dataset.yaml trouvé partout.
 # Pas d'utilisateur non-root ici : le lanceur KFP écrit les artefacts sous /minio, /s3…
-# à la racine du conteneur (le Lab 4 durcira l'image de serving).
+# à la racine du conteneur.
 # DO_NOT_TRACK : ni MLflow ni Evidently n'envoient de télémétrie (GX : gx/*.yml).
 ENV PYTHONPATH=/app \
     DATASET_CONFIG=/app/dataset.yaml \
@@ -1383,7 +1383,7 @@ def detect_drift(
 - Les seuils sont des paramètres **sans valeur par défaut** : chaque pipeline les lit dans
   `params.yaml` à la compilation (comme les hyper-paramètres au Lab 2).
 - `fail_on_drift` choisit entre gate bloquant et simple signalement ; le composant **renvoie**
-  le verdict (`True` si drift) : le Lab 6 s'en servira pour déclencher un ré-entraînement.
+  le verdict (`True` si drift), réutilisable par d'autres étapes.
 
 ```python
 # Fichier : pipelines/drift_demo.py
@@ -1514,7 +1514,6 @@ max_violation_rate: 0.05
 
 # Sous-groupes sensibles de dataset.yaml : chaque groupe d'au moins
 # `min_group_size` demandes doit lui aussi atteindre promotion_threshold.
-# (L'équité au sens strict, écarts entre groupes et mitigation, est l'objet du Lab 8.)
 min_group_size: 30
 ```
 
@@ -1529,7 +1528,7 @@ On teste ce que fait le modèle, pas seulement sa métrique globale :
 - directionnels (DIR) : augmenter une variable ne déplace le risque que dans le bon sens.
 Modèle testé : models/model (dvc repro, ou step train du pipeline), sur data/processed/test.csv,
 au seuil de décision du modèle. Les attentes propres au dataset sont dans tests/behavior.yaml.
-Sans modèle local (CI du Lab 6), les tests sont ignorés.
+Sans modèle local, les tests sont ignorés.
 """
 
 from pathlib import Path
@@ -1651,8 +1650,8 @@ python -m pytest -q tests/test_model_behavior.py
 > [!NOTE]
 > **Équité : ce test n'est qu'un plancher**
 > `test_performance_par_sous_groupe` vérifie que chaque groupe sensible atteint le seuil ; il
-> ne mesure ni les écarts entre groupes ni leurs causes. L'équité au sens strict (parité
-> démographique, égalité des chances, mitigation) est l'objet du Lab 8. Les groupes de moins de
+> ne mesure ni les écarts entre groupes ni leurs causes. Les écarts entre groupes ne sont
+> pas mesurés ici. Les groupes de moins de
 > 30 demandes (`foreign_worker = no` : 6 demandes au test) ne sont pas évalués.
 
 ### 6.2 Le rapport Evidently et le gate du modèle
@@ -2147,13 +2146,6 @@ kfp-s3 s3 cp --recursive "s3://mlpipeline/v2/artifacts/scoring-pipeline/$RUN_ID/
 pkill -f "port-forward svc/seaweedfs"
 ```
 
-> [!TIP]
-> **Pour aller plus loin : Evidently en continu**
-> Dans le Module 7 (Monitoring), on complétera cette détection de drift ponctuelle par
-> Evidently qui tourne en continu sur le trafic de production, avec des tableaux de bord dans
-> Grafana. Le composant KFP d'aujourd'hui reste utile en mode batch : valider un lot de données
-> avant un ré-entraînement (Lab 6).
-
 Commitez le travail du lab (le bloc *Lab 3* du `.gitignore`, vu à l'étape 1.5, écarte les
 pipelines compilés et les rapports regénérés) :
 
@@ -2287,22 +2279,16 @@ l'approuve ; vous la fusionnez, puis vous revenez sur `main` : `git switch main 
   les échecs `critical`.
 - **L'invariance qui échoue** : ajoutez `own_telephone` (avec `max_flip_rate: 0.05`) dans
   `tests/behavior.yaml` : 9 % des décisions changent. Le modèle utilise un indicateur de
-  richesse des années 1970 ; faut-il le garder ? (Le Lab 8 outillera ce genre de discussion.)
+  richesse des années 1970 ; faut-il le garder ?
 - **Le gate dans DVC** : ajouter une stage `validate` à `dvc.yaml` (`python -m
   src.validate_data`, dépendances `data/raw/dataset.csv` et `gx/`) et faire dépendre
   `prepare` de son rapport : `dvc repro` refusera lui aussi les données corrompues.
-- **Pandera en CI** : transformer l'encadré Pandera de 1.5 en test pytest du Lab 6.
+- **Pandera en test unitaire** : transformer l'encadré Pandera de 1.5 en test pytest.
 - Documentation :
   [GX Core](https://docs.greatexpectations.io/docs/core/introduction/),
   [Evidently — Reports](https://docs.evidentlyai.com/docs/library/report),
   [KFP — artifacts](https://www.kubeflow.org/docs/components/pipelines/user-guides/data-handling/artifacts/),
   [CheckList (Ribeiro et al., ACL 2020)](https://aclanthology.org/2020.acl-main.442/).
-
-> [!NOTE]
-> **Prochaine étape**
-> Module 4 — Conteneurisation & packaging des modèles. Vous allez prendre le modèle validé
-> aujourd'hui, le convertir en ONNX, le packager dans une image Docker optimisée (< 500 Mo) et
-> benchmarker sa latence. C'est le préalable au serving du Module 5.
 
 ## Vérification automatique
 

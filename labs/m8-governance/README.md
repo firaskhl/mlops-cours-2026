@@ -1950,13 +1950,6 @@ kubectl get "$POD" -n scoring -o yaml | grep -c kube-api-access  # 0 : aucun jet
 - **Suivi en production** : exporter les taux d'acceptation par groupe en métriques
   Prometheus (Lab 7) et alerter sur la dérive de l'équité.
 
-> [!NOTE]
-> **Prochaine étape**
-> Module 9 — LLMOps. Vous allez adapter tout ce qu'on a vu au cas des grands modèles de
-> langage : serving local, base vectorielle pour le RAG, observabilité des chaînes. Les
-> problématiques de gouvernance de ce module y sont encore plus critiques : hallucinations,
-> injections de prompt, confidentialité des documents.
-
 ## Vérification automatique
 
 ```bash

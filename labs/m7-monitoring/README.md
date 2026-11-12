@@ -184,7 +184,7 @@ relira (étape 6) : c'est le « 4e pilier » de l'observabilité ML, les événe
 > Une demande de crédit décrit une personne (âge, situation familiale, nationalité). La
 > journaliser est légitime pour surveiller le modèle, à condition de le limiter : rétention
 > courte (72 h dans Loki, étape 7), accès restreint, pas d'identifiant direct (l'API n'en
-> reçoit pas). `LOG_PREDICTIONS=false` coupe le journal. Le Lab 8 revient sur le RGPD.
+> reçoit pas). `LOG_PREDICTIONS=false` coupe le journal.
 
 ### 1.3 Modifier `packaging/app/serve.py`
 
@@ -282,7 +282,7 @@ SCORES = Histogram(
 )
 GROUP_PREDICTIONS = Counter(
     "ml_predictions_by_group_total",
-    "Décisions par groupe d'un attribut sensible de dataset.yaml (équité, Lab 8)",
+    "Décisions par groupe d'un attribut sensible de dataset.yaml (équité)",
     ["attribute", "group", "outcome"],
     registry=REGISTRY,
 )
@@ -312,7 +312,7 @@ _known_groups: dict[str, set[str]] = {s.column: set() for s in SENSITIVE}
 
 
 def group_of(s, value: Any) -> str:
-    """Groupe d'une valeur, avec le découpage du Lab 8 (SensitiveAttribute.groups).
+    """Groupe d'une valeur, avec le découpage de dataset.yaml (SensitiveAttribute.groups).
 
     Réécrit sans pandas : pd.cut coûte ~0,6 ms par appel, six fois l'inférence ONNX.
     bins=[0, 25, 120] et right=False : [0, 25) -> labels[0], [25, 120) -> labels[1].
@@ -495,7 +495,7 @@ Ce qui a changé par rapport au Lab 6 :
   (`/predict`, jamais l'URL brute) et le code de réponse : les erreurs de validation (`422`)
   sont un signal de qualité de données, les `5xx` un signal de disponibilité.
 - **`observe()`** alimente les métriques métier et le journal. Le découpage par groupe
-  (`group_of`) reproduit exactement celui du Lab 8 (`SensitiveAttribute.groups`) mais sans
+  (`group_of`) reproduit exactement celui de `dataset.yaml` (`SensitiveAttribute.groups`) mais sans
   pandas : `pd.cut` coûte 0,6 ms par appel, six fois l'inférence ONNX.
 - **Un registre propre au module** (`REGISTRY`, avec les métriques du processus : mémoire,
   CPU, version de Python) plutôt que le registre global de `prometheus-client` : les tests du
@@ -562,8 +562,8 @@ uv run pytest tests/test_monitoring.py -v
 
 > **Sortie attendue :** `13 passed`. Les trois premiers tests interrogent l'API en mémoire
 > (`TestClient`) : `/metrics` répond `200` (pas de redirection), les métriques métier sont
-> présentes, une requête invalide est comptée en `422`, et les groupes de l'API sont ceux du
-> Lab 8. Ils servent le vrai modèle (`packaging/model/`), ou le mini-modèle des tests du
+> présentes, une requête invalide est comptée en `422`, et les groupes de l'API sont ceux de
+> `dataset.yaml`. Ils servent le vrai modèle (`packaging/model/`), ou le mini-modèle des tests du
 > Lab 6 si ceux-ci ont déjà importé l'API (`uv run pytest` lance tout : une quarantaine de
 > tests). Les suivants testent le générateur de trafic et l'analyse de canary (étapes 5 et
 > 10). Ils tournent aussi dans la CI du Lab 6 : une régression d'observabilité bloque désormais
@@ -2285,10 +2285,3 @@ Le script `labs/m7-monitoring/check.sh` vérifie, sans rien modifier et sans por
 
 Variables optionnelles : `NS`, `ISVC`, `MON_NS`, `REGISTRY`. Code retour = nombre de
 vérifications en échec.
-
-> [!NOTE]
-> **Prochaine étape**
-> Module 8 — Gouvernance, sécurité, fairness. Vous allez scanner votre image avec Trivy et
-> votre modèle avec ModelScan, mesurer les disparités de décision par groupe sensible avec
-> Fairlearn (celles que le dashboard suit déjà en production), expliquer les refus avec SHAP
-> et produire une Model Card complète.

@@ -1,0 +1,7 @@
+[core]
+    remote = local-s3
+['remote "local-s3"']
+    url = s3://dvc-store
+    endpointurl = http://localhost:8333
+    access_key_id = seaweedfs
+    secret_access_key = seaweedfs

@@ -1,7 +1,7 @@
 # pipelines/scoring_pipeline.py — version de l'étape 3 (complétée aux étapes 5 et 6)
 """Pipeline KFP « scoring-pipeline » du Lab 2.
 
-ingest -> validate -> prepare -> train -> evaluate
+ingest -> validate -> prepare -> train -> evaluate -> register
 Compilation : python -m pipelines.scoring_pipeline   (écrit scoring_pipeline.yaml)
 Les hyper-paramètres par défaut sont lus dans params.yaml AU MOMENT DE LA COMPILATION :
 params.yaml reste la seule source des valeurs par défaut, comme pour dvc repro.
@@ -17,6 +17,7 @@ from pipelines.components import (
     evaluate_model,
     ingest_data,
     prepare_features,
+    register_model,
     train_model,
     validate_data,
 )
@@ -60,12 +61,15 @@ def scoring_pipeline(
         kfp_run_id=dsl.PIPELINE_JOB_ID_PLACEHOLDER,  # remplacé par l'id du run KFP
     )
 
-    evaluate_model(
+    eval_task = evaluate_model(
         model=train_task.outputs["model"],
         test_data=prep_task.outputs["test_data"],
         run_id=train_task.outputs["Output"],
         mlflow_uri=mlflow_uri,
     )
+
+    register_task = register_model(run_id=train_task.outputs["Output"], mlflow_uri=mlflow_uri)
+    register_task.after(eval_task)  # on n'enregistre qu'un modèle évalué
 
 
 if __name__ == "__main__":

@@ -62,20 +62,17 @@ def run_stage(module: str, args=(), inputs=None, outputs=None, env=None) -> None
         work = Path(tmp)
         for rel, src in (inputs or {}).items():
             copy(src, work / rel)
-        execute(module, args, work, env)
+        try:
+            execute(module, args, work, env)
+        except subprocess.CalledProcessError:
+            # Gate en échec (Lab 3) : on recopie quand même les rapports déjà écrits,
+            # ils expliquent l'échec (kfp.local les garde dans local_outputs/)
+            for rel, dst in (outputs or {}).items():
+                if (work / rel).exists():
+                    copy(work / rel, dst)
+            raise
         for rel, dst in (outputs or {}).items():
             copy(work / rel, dst)
-
-
-# --- Airflow : dossier de travail du run, sur S3 (ou en local pour tester) ---------------
-def _s3(workspace: str):
-    """Client S3 (endpoint et identifiants lus dans l'environnement), bucket, préfixe."""
-    import boto3
-
-    bucket, _, prefix = workspace.removeprefix("s3://").partition("/")
-    prefix = re.sub(r"[^A-Za-z0-9._/-]", "_", prefix).strip("/")  # run_id Airflow : « : + »
-    return boto3.client("s3"), bucket, prefix
-
 
 def pull(workspace: str, work: Path) -> None:
     """Récupère les sorties des étapes précédentes du run."""

@@ -1,0 +1,20 @@
+# Exclure tout par défaut
+*
+
+# Configurations du projet
+!dataset.yaml
+!params.yaml
+
+# Code métier
+!src/
+!src/**
+
+# Fichiers nécessaires à l'orchestration
+!pipelines/
+!pipelines/requirements.txt
+!pipelines/__init__.py
+!pipelines/stage.py
+
+# Exclure les fichiers temporaires Python
+**/__pycache__/
+**/*.pyc
